@@ -1,5 +1,5 @@
 USE 
-	pinulito_pdv;
+	PINULITO_PDV
 SELECT
 	CASE WHEN cab.canal = 'POS-GAS' OR cab.canal = 'POS-TIENDA' THEN 'GASOLINERA' ELSE 'CONTABILIDAD' END AS generadoPor,
 	emp.nombre AS empresa,
@@ -7,7 +7,7 @@ SELECT
 	cab.nit,
 	cab.nombre AS nombre_cliente,
 	det.descripcion,
-	CONVERT(varchar, cab.fechaHora, 110) AS fecha,
+	CONVERT(varchar, cab.fechaHora, 103) AS fecha,
 	CONVERT(varchar, cab.fechaHora, 108) AS hora,
 	cab.uuidFactura,
 	det.cantidad,
