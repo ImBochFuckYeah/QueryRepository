@@ -1,4 +1,4 @@
-CREATE FUNCTION dbo.CalcularTotalAhorro
+ALTER FUNCTION dbo.CalcularTotalAhorro
 (
     @CodigoEmpleado INT
 )

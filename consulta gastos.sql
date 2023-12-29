@@ -1,7 +1,10 @@
+USE PINULITO_PDV
+
 --TABLA GASTO TOTAL
 DECLARE @GastoTotal as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (max),
@@ -14,6 +17,7 @@ DECLARE @GastoTotal as TABLE (
 DECLARE @Recibos as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (max),
@@ -26,6 +30,7 @@ DECLARE @Recibos as TABLE (
 DECLARE @Facturas as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (max),
@@ -38,6 +43,7 @@ DECLARE @Facturas as TABLE (
 DECLARE @Rentas as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (max),
@@ -50,6 +56,7 @@ DECLARE @Rentas as TABLE (
 DECLARE @Verduras as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (max),
@@ -62,6 +69,7 @@ DECLARE @Verduras as TABLE (
 DECLARE @EnergiaElectrica as TABLE (
 	empresa nvarchar(6),
     tienda nvarchar(6),
+    nombre_tienda nvarchar(300),
 	noDoc nvarchar(max),
     tipoGasto nvarchar(64),
     descripcion nvarchar (100),
@@ -72,7 +80,7 @@ DECLARE @EnergiaElectrica as TABLE (
     numero nvarchar(max)
 ) 
 
-DECLARE @fechaInicio date = '2023-08-01' DECLARE @fechaFin date = '2023-08-31' 
+DECLARE @fechaInicio date = '2023-11-01' DECLARE @fechaFin date = '2023-11-30' 
 
 --INSERT INTO TABLE @RECIBOS
 INSERT INTO
@@ -80,6 +88,15 @@ INSERT INTO
 SELECT
 	T1.empresa as empresa,
 	T1.tienda AS tienda,
+    (
+        select
+        tda_nombre
+        from
+        tTienda
+        where
+        tTienda.empresa = T1.empresa
+        and tTienda.tienda = T1.tienda
+    ) nombre_tienda,
     idIngresoRecibo,
     'RECIBO' as tipo,
     T2.nombre,
@@ -103,6 +120,15 @@ INSERT INTO
 SELECT
 	T1.empresa as empresa,
 	T1.tienda AS tienda,
+    (
+        select
+        tda_nombre
+        from
+        tTienda
+        where
+        tTienda.empresa = T1.empresa
+        and tTienda.tienda = T1.tienda
+    ) nombre_tienda,
     T1.idCompra,
     'FACTURA' as tipo,
     (
@@ -131,6 +157,15 @@ INSERT INTO
 SELECT
 	T1.empresa as empresa,
 	T1.tienda AS tienda,
+    (
+        select
+        tda_nombre
+        from
+        tTienda
+        where
+        tTienda.empresa = T1.empresa
+        and tTienda.tienda = T1.tienda
+    ) nombre_tienda,
     idAbonoRenta,
     'RENTA',
     'RESERVA RENTA ' + mesRenta,
@@ -152,6 +187,15 @@ INSERT INTO
 SELECT
 	T1.empresa as empresa,
 	T1.tienda AS tienda,
+    (
+        select
+        tda_nombre
+        from
+        tTienda
+        where
+        tTienda.empresa = T1.empresa
+        and tTienda.tienda = T1.tienda
+    ) nombre_tienda,
     idIngresoVerdura,
     'RECIBO VERDURA' as tipo,
     'COMPRA DE VERDURA SIN FACTURA',
@@ -172,6 +216,15 @@ INSERT INTO
 SELECT
 	T1.empresa as empresa,
 	T1.tienda AS tienda,
+    (
+        select
+        tda_nombre
+        from
+        tTienda
+        where
+        tTienda.empresa = T1.empresa
+        and tTienda.tienda = T1.tienda
+    ) nombre_tienda,
     idPagoElectricidad,
     'PAGO ELECTRICIDAD',
     'PAGO ENERGIA ' + empresaElectrica,
