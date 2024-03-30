@@ -1,3 +1,5 @@
+use pinulito_pdv;
+
 select
 	det.descripcion,
 	det.sku,
