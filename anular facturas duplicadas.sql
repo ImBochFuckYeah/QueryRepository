@@ -1,4 +1,4 @@
-DECLARE @fechaIni DATE = '2024-01-01' DECLARE @fechaFin DATE = '2024-01-23' DECLARE @idFactura int DECLARE @uuid nvarchar(36) DECLARE c CURSOR FOR
+DECLARE @fechaIni DATE = '2024-04-01' DECLARE @fechaFin DATE = '2024-04-23' DECLARE @idFactura int DECLARE @uuid nvarchar(36) DECLARE c CURSOR FOR
 SELECT
     MIN(idFactura) idFactura,
     uuidFactura

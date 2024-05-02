@@ -40,8 +40,8 @@ FROM
     AND t0.tienda = t1.tienda
     INNER JOIN tEmpresa t2 ON t0.empresa = t2.empresa
 WHERE
-    fecha BETWEEN '2024-01-01' AND '2024-01-31'
-    AND t0.empresa = '00001' -- AND t0.tienda = '$tienda'-- AND itemCode is not null
+    fecha BETWEEN '2024-03-01' AND '2024-03-31'
+    AND t0.empresa = '00003' -- AND t0.tienda = '$tienda'-- AND itemCode is not null
 ORDER BY
     t0.fecha,
     empresa,
