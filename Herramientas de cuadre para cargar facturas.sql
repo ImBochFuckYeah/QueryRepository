@@ -64,12 +64,33 @@ WHERE
     AND anulada = 0
     AND DATEDIFF(DAY, CAST(fechaHora AS DATE), CAST(fechaCertificacion AS DATE)) > 5 */
 
-/* SELECT 
-   idFactura, 
-    uuidFactura, 
-    CAST(fechaHora AS DATE) fecha, 
-    t1.total total_cabecera, 
-    (SELECT SUM(cantidad * precio) 
-FROM tFacturaDetalleSapMensual t2 WHERE t1.idFactura = t2.idFactura) total_detalle FROM tFacturaSapMensual t1 WHERE t1.total < (
-    SELECT SUM(cantidad * precio) FROM tFacturaDetalleSapMensual t2 WHERE t1.idFactura = t2.idFactura
-) ORDER BY total_cabecera DESC */
+/* SELECT
+    idFactura,
+    uuidFactura,
+    CAST(fechaHora AS DATE) fecha,
+    t1.total total_cabecera,
+    (
+        SELECT
+            SUM(cantidad * precio)
+        FROM
+            tFacturaDetalleSapMensual t2
+        WHERE
+            t1.idFactura = t2.idFactura
+    ) total_detalle
+FROM
+    tFacturaSapMensual t1
+WHERE
+    t1.total < (
+        SELECT
+            SUM(cantidad * precio)
+        FROM
+            tFacturaDetalleSapMensual t2
+        WHERE
+            t1.idFactura = t2.idFactura
+    )
+    AND empresa = '00003'
+    AND cast(fechacertificacion AS DATE) BETWEEN '2024-04-16' AND '2024-04-30'
+    AND anulada = 0
+    AND detallePago like '%cupon%'
+ORDER BY
+    total_cabecera DESC; */

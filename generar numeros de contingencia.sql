@@ -10,5 +10,5 @@ SET @RandomNumber = CAST(RAND() * 1000000000 AS INT)
 UPDATE tFacturaSemanal 
 SET noContingencia = CAST(RAND(CHECKSUM(NEWID())) * 1000000000 AS INT), contingencia = 1, uuidFactura = NULL, fechaCertificacion = NULL
 WHERE idFactura IN (
-    18531495
+    24850115
 )
