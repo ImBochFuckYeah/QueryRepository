@@ -1,0 +1,71 @@
+DECLARE @pagarBonif int = 0
+DECLARE @año int = 2024
+DECLARE @codDepto int = 0
+DECLARE @supervisor int = 0
+DECLARE @idEmpresa int = 8
+SELECT
+    T1.*,
+    T1.julio as [7],
+    T1.agosto as [8],
+    T1.septiembre as [9],
+    T1.octubre as [10],
+    T1.noviembre as [11],
+    T1.diciembre as [12],
+    T1.enero as [1],
+    T1.febrero as [2],
+    T1.marzo as [3],
+    T1.abril as [4],
+    T1.mayo as [5],
+    T1.junio as [6],
+    T1.observacion as observaciones,
+    T2.NIT AS nit,
+    T1.aliasCodigo AS codigo,
+    T2.noDoc AS dpi,
+    UPPER(T3.nombre) AS departamento,
+    UPPER(
+        T2.nombreEmpleado + ' ' + T2.segundoNombre + ' ' + T2.apellidoEmpleado + ' ' + T2.segundoApellido + ' ' + T2.apellidoCasada
+    ) AS empleado,
+    T4.fechaIngreso,
+    CONVERT(nvarchar, T4.fechaIngreso, 103) AS fechaString
+FROM
+    tBono14 T1
+    INNER JOIN tEmpleado T2 ON T1.codEmpleado = T2.codEmpleado --and t2.activo=1
+    INNER JOIN tDepartamento T3 ON T1.codDepto = T3.codDepto
+    LEFT JOIN tContrato T4 ON T1.codEmpleado = T4.codEmpleado
+    AND (
+        T4.finContract IS NULL
+        OR T4.finContract = '1900-01-01'
+        OR t4.activo = 1
+    )
+WHERE
+    anio = @año
+    AND T1.codEmpresa = @idEmpresa
+    and (
+        T1.codDepto = @codDepto
+        or 0 = @codDepto
+    )
+ORDER BY
+    codDepto,
+    codigo ASC DECLARE @añoPasado int = @año - 1 DECLARE @fechaFinBono datetime = DATEFROMPARTS(@año, 06, 30) DECLARE @fechaInicioBono datetime = DATEFROMPARTS(@añoPasado, 07, 01) DECLARE @fechaIni as datetime,
+    @fechaFin as datetime,
+    @periodoLetras as nvarchar(512),
+    @empresa as nvarchar(512),
+    @nitEmpresa as nvarchar(18)
+SET
+    @fechaIni = DATEFROMPARTS(@añoPasado, 07, 01)
+SET
+    @fechaFin = @fechaFinBono
+SELECT
+    @periodoLetras = CAST(DAY(@fechaIni) as varchar) + ' de ' + DATENAME(MONTH, @fechaIni) + ' de ' + CAST(YEAR(@fechaIni) as varchar) + ' al ' + CAST(DAY(@fechaFin) as varchar) + ' de ' + DATENAME(MONTH, @fechaFin) + ' de ' + CAST(YEAR(@fechaFin) as varchar)
+SELECT
+    @empresa = nombreComercial,
+    @nitEmpresa = nit
+FROM
+    tEmpresa
+WHERE
+    codEmpresa = @idEmpresa
+SELECT
+    @periodoLetras as periodoLetras,
+    @empresa as empresa,
+    @nitEmpresa as nitEmpresa,
+    CONVERT(varchar, @fechaIni, 103) + ' - ' + CONVERT(varchar, @fechaFin, 103) as periodo

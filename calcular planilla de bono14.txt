@@ -1,0 +1,220 @@
+DECLARE @pagarBonif int = 0
+DECLARE @año int = 2024
+DECLARE @codDepto int = 0
+DECLARE @idEmpresa int = 8
+DECLARE @bonif decimal(5, 2) = 250 * @pagarBonif 
+DECLARE @añoPasado int = @año - 1 
+DECLARE @fechaFinBono datetime = DATEFROMPARTS(@año, 06, 30) 
+DECLARE @fechaInicioBono datetime = DATEFROMPARTS(@añoPasado, 07, 01) 
+DECLARE @detalle AS TABLE (
+	codEmpleado int,
+	nit nvarchar(32),
+	dpi nvarchar(24),
+	codDepto int,
+	departamento nvarchar(64),
+	codigo nvarchar(15),
+	empleado nvarchar(128),
+	fechaIngreso date,
+	[7] decimal(9, 2),
+	[8] decimal(9, 2),
+	[9] decimal(9, 2),
+	[10] decimal(9, 2),
+	[11] decimal(9, 2),
+	[12] decimal(9, 2),
+	[1] decimal(9, 2),
+	[2] decimal(9, 2),
+	[3] decimal(9, 2),
+	[4] decimal(9, 2),
+	[5] decimal(9, 2),
+	[6] decimal(9, 2),
+	total decimal(11, 2),
+	aguinaldo decimal(10, 2),
+	anticipo decimal(10, 2),
+	liquido decimal(10, 2),
+	observaciones nvarchar(512)
+)
+INSERT INTO
+	@detalle
+SELECT
+	Pivoth.codEmpleado,
+	x2.NIT,
+	x2.noDoc,
+	x0.departamento,
+	x1.nombre,
+	x0.codigo,
+	x0.empleado,
+	Pivoth.fechaIngreso,
+	isnull([7], 0),
+	isnull([8], 0),
+	isnull([9], 0),
+	isnull([10], 0),
+	isnull([11], 0),
+	isnull([12], 0),
+	isnull([1], 0),
+	isnull([2], 0),
+	isnull([3], 0),
+	isnull([4], 0),
+	isnull([5], 0),
+	isnull([6], 0),
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+FROM
+	(
+		SELECT
+			t1.fechaIngreso,
+			t0.codEmpleado,
+			t2.codigo,
+			CASE
+				WHEN (t0.codEmpleado in (207, 214, 3384, 3461, 3494)) THEN ((sSimples + sDobles))
+				ELSE 0
+			END + CASE
+				WHEN t1.fechaIngreso <= t3.fechaInicio THEN ((t2.salarioMensual + @bonif) / 2)
+				ELSE (
+					15 - DATEDIFF(DAY, t3.fechaInicio, t1.fechaIngreso)
+				) * ((t2.salarioMensual + @bonif) / 30)
+			END as salario,
+			MONTH(t3.fechaFin) as mes
+		FROM
+			tEmpleado t0
+			INNER JOIN tContrato t1 ON t0.codEmpleado = t1.codEmpleado
+			AND t1.codEmpleado in (
+				(
+					SELECT
+						distinct codEmpleado
+					FROM
+						tPlanilla
+					WHERE
+						idEmpresa = @idEmpresa
+						AND idPeriodo = (
+							SELECT
+								idPeriodo
+							FROM
+								tPeriodo
+							WHERE
+								fechaFin = @fechaFinBono
+						)
+				)
+			)
+			INNER JOIN tPlanilla t2 ON t0.codEmpleado = t2.codEmpleado
+			AND t2.idEmpresa = @idEmpresa
+			INNER JOIN tPeriodo t3 ON t2.idPeriodo = t3.idPeriodo
+		WHERE
+			(
+				finContract is null
+				OR finContract = '1900-01-01'
+				OR finContract >= @fechaFinBono
+			)
+			AND t0.codEmpleado not in (
+				SELECT
+					codigoEmpleado
+				FROM
+					tNoGeneraBonoAgui
+			)
+			AND t3.fechaInicio >= @fechaInicioBono
+			AND t3.fechaFin > t1.fechaIngreso
+			AND t3.fechaFin <= @fechaFinBono
+	) as tabla PIVOT (
+		SUM(salario) FOR mes in (
+			[7],
+			[8],
+			[9],
+			[10],
+			[11],
+			[12],
+			[1],
+			[2],
+			[3],
+			[4],
+			[5],
+			[6]
+		)
+	) as Pivoth
+	INNER JOIN tPlanilla x0 ON Pivoth.codEmpleado = x0.codEmpleado
+	AND x0.idEmpresa = @idEmpresa
+	AND x0.idPeriodo = (
+		SELECT
+			idPeriodo
+		FROM
+			tPeriodo
+		WHERE
+			fechaFin = @fechaFinBono
+	)
+	INNER JOIN tDepartamento x1 ON x0.departamento = x1.codDepto
+	AND x1.codEmpresa = @idEmpresa
+	INNER JOIN tEmpleado x2 ON x2.codEmpleado = x0.codEmpleado
+UPDATE
+	@detalle
+SET
+	total = [12] + [1] + [2] + [3] + [4] + [5] + [6] + [7] + [8] + [9] + [10] + [11]
+UPDATE
+	@detalle
+SET
+	aguinaldo = total / 12
+UPDATE
+	@detalle
+SET
+	anticipo = isnull(
+		(
+			SELECT
+				montoAnticipo
+			FROM
+				tAnticipo
+			WHERE
+				codEmpleado = [@detalle].codEmpleado
+				AND tipoAnticipo = 'B14'
+				AND [año] = @año
+		),
+		0
+	)
+UPDATE
+	@detalle
+SET
+	liquido = aguinaldo - anticipo
+UPDATE
+	@detalle
+SET
+	observaciones = 'ANTICIPO BONO 14'
+WHERE
+	anticipo > 0
+SELECT
+	*,
+	CONVERT(nvarchar, fechaIngreso, 103) as fechaString
+FROM
+	@detalle
+WHERE
+	(
+		codDepto = @codDepto
+		OR 0 = @codDepto
+	)
+ORDER BY
+	departamento,
+	codigo ASC
+SET
+	LANGUAGE Spanish;
+
+DECLARE @fechaIni as datetime,
+@fechaFin as datetime,
+@periodoLetras as nvarchar(512),
+@empresa as nvarchar(512),
+@nitEmpresa as nvarchar(18)
+SET
+	@fechaIni = DATEFROMPARTS(@añoPasado, 07, 01)
+SET
+	@fechaFin = @fechaFinBono
+SELECT
+	@periodoLetras = CAST(DAY(@fechaIni) as varchar) + ' de ' + DATENAME(MONTH, @fechaIni) + ' de ' + CAST(YEAR(@fechaIni) as varchar) + ' al ' + CAST(DAY(@fechaFin) as varchar) + ' de ' + DATENAME(MONTH, @fechaFin) + ' de ' + CAST(YEAR(@fechaFin) as varchar)
+SELECT
+	@empresa = nombreComercial,
+	@nitEmpresa = nit
+FROM
+	tEmpresa
+WHERE
+	codEmpresa = @idEmpresa
+SELECT
+	@periodoLetras as periodoLetras,
+	@empresa as empresa,
+	@nitEmpresa as nitEmpresa,
+	CONVERT(varchar, @fechaIni, 103) + ' - ' + CONVERT(varchar, @fechaFin, 103) as periodo

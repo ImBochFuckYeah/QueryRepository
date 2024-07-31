@@ -8,7 +8,7 @@ SET @RandomNumber = CAST(RAND() * 1000000000 AS INT)
 /* ASIGNAR NUMEROS A FACTURAS (SIN NUMERO DE CONTINGENCIA) */
 
 UPDATE tFacturaSemanal 
-SET noContingencia = CAST(RAND(CHECKSUM(NEWID())) * 1000000000 AS INT), contingencia = 1, uuidFactura = NULL, fechaCertificacion = NULL
+SET noContingencia = CAST(RAND(CHECKSUM(NEWID())) * 1000000000 AS INT), contingencia = 1, uuidFactura = NULL, fechaCertificacion = NULL --, indendificador = NULL
 WHERE idFactura IN (
-    24850115
+    30625316
 )

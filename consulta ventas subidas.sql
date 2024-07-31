@@ -25,6 +25,7 @@ SELECT
     t0.empresa,
     t0.tienda,
     itemCode as sku,
+    sku_base,
     itemName,
     cantidad,
     total,  
@@ -40,8 +41,9 @@ FROM
     AND t0.tienda = t1.tienda
     INNER JOIN tEmpresa t2 ON t0.empresa = t2.empresa
 WHERE
-    fecha BETWEEN '2024-03-01' AND '2024-03-31'
-    AND t0.empresa = '00003' -- AND t0.tienda = '$tienda'-- AND itemCode is not null
+    fecha = '2024-06-26'
+    -- fecha BETWEEN '2024-03-01' AND '2024-03-31'
+    AND t0.empresa = '00002' -- AND t0.tienda = '$tienda'-- AND itemCode is not null
 ORDER BY
     t0.fecha,
     empresa,

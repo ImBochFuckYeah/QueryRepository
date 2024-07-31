@@ -1,0 +1,46 @@
+-- CREATE DATABASE pinulito_ins
+
+-- CREATE TABLE empresas (
+--     id INT PRIMARY KEY IDENTITY(1,1),
+--     codigo NVARCHAR(50) UNIQUE NOT NULL,
+--     nombre NVARCHAR(100),
+--     nombre_db NVARCHAR(100) UNIQUE NOT NULL,
+--     logo NVARCHAR(MAX),
+--     decimales INT DEFAULT 4,
+--     fecha_modificacion DATETIME DEFAULT GETDATE(),
+--     vigente BIT DEFAULT 1
+-- );
+
+-- CREATE TABLE bodegas (
+--     id INT PRIMARY KEY IDENTITY(1,1),
+--     nombre NVARCHAR(100) NOT NULL,
+--     id_empresa INT NOT NULL,
+--     codigo NVARCHAR(50) UNIQUE NOT NULL,
+--     codigo_centro_costo NVARCHAR(150) NOT NULL,
+--     revision BIT DEFAULT 0,
+--     autorizacion BIT DEFAULT 1,
+--     fecha_modificacion DATETIME DEFAULT GETDATE(),
+--     vigente BIT DEFAULT 1,
+--     FOREIGN KEY (id_empresa) REFERENCES empresas(id)
+-- );
+
+-- CREATE TABLE usuario_bodegas (
+--     id INT PRIMARY KEY IDENTITY(1,1),
+--     id_empleado INT NOT NULL,
+--     id_bodega INT NOT NULL,
+--     solicitar BIT DEFAULT 1,
+--     revisar BIT DEFAULT 0,
+--     autorizar BIT DEFAULT 0,
+--     fecha_modificacion DATETIME DEFAULT GETDATE(),
+--     vigente BIT DEFAULT 1,
+--     FOREIGN KEY (id_bodega) REFERENCES bodegas(id)
+-- );
+
+-- CREATE TABLE precios (
+--     id INT PRIMARY KEY IDENTITY(1,1),
+--     item_code NVARCHAR(50) NOT NULL,
+--     card_code NVARCHAR(50) NOT NULL,
+--     precio DECIMAL(20, 6) NOT NULL,
+--     fecha_modificacion DATETIME DEFAULT GETDATE(),
+--     vigente BIT
+-- );
