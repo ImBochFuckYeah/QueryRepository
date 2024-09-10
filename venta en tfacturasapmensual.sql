@@ -1,4 +1,4 @@
--- use pinulito_pdv;
+use pinulito_pdv;
 
 select 
     cast(fechaHora as date) fecha,
@@ -11,26 +11,18 @@ from
     join tFacturaDetalleSapMensual det on det.idFactura = cab.idFactura
 where
     cab.anulada = 0
-    and cab.empresa = '00003'
-    and cast(fechaHora as date) between '2024-06-16' and '2024-06-30'
+    and cab.empresa = '00005'
+    and cast(fechaHora as date) between '2024-08-01' and '2024-08-31'
 group by
     cast(fechaHora as date)
 order by fecha;
 
--- select uuidFactura, count(*) from tFacturaSapMensual where anulada = 0 and empresa = '00003' group by uuidFactura having count(uuidFactura) > 1;
+-- select uuidFactura, count(*) from tFacturaSapMensual where anulada = 0 and empresa = '00005' group by uuidFactura having count(uuidFactura) > 1;
 
--- select * from tFacturaSapMensual where uuidFactura in (
--- '01B814C9-45E3-4617-9D0B-056C65130145',
--- 'CD6C762D-DC8C-4409-8E0A-B2D46E841FD8'
--- );
+-- select * from tFacturaSapMensual where uuidFactura in ();
 
--- update tFacturaSapMensual set anulada = 1 where idFactura in (
--- 494641,
--- 381154
--- );
+-- update tFacturaSapMensual set anulada = 1 where idFactura in ();
 
--- select * from tFacturaSapMensual where idFactura = 528075
--- select * from tFacturaDetalleSapMensual where idFactura = 528075
--- delete from tFacturaDetalleSapMensual where idFacturaDetalle in (
--- 845197
--- )
+-- select * from tFacturaSapMensual where idFactura = 528075;
+-- select * from tFacturaDetalleSapMensual where idFactura = 528075;
+-- delete from tFacturaDetalleSapMensual where idFacturaDetalle in ();

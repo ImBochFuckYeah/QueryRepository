@@ -1,4 +1,4 @@
-USE PINULITO_PDV
+-- USE PINULITO_PDV
 
 --TABLA GASTO TOTAL
 DECLARE @GastoTotal as TABLE (
@@ -111,7 +111,7 @@ DECLARE @PagoPersonaExtra as TABLE (
     numero nvarchar(max)
 )
 
-DECLARE @fechaInicio date = '2024-06-01' DECLARE @fechaFin date = '2024-06-30'
+DECLARE @fechaInicio date = '2024-08-01' DECLARE @fechaFin date = '2024-08-31'
 
 --INSERT INTO TABLE @RECIBOS
 INSERT INTO

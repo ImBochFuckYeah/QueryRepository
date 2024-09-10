@@ -16,4 +16,5 @@ FROM
 WHERE
     emp.idEmpresa IN (1, 2, 3, 4, 5)
     AND tda.idTienda NOT IN (588, 628)
-    AND tda.tienda NOT IN ('99999');
+    AND tda.tienda NOT IN ('99999')
+    AND tda.inactiva = 0;
