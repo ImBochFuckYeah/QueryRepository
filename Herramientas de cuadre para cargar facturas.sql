@@ -1,4 +1,4 @@
--- USE PINULITO_PDV
+USE PINULITO_PDV
 
 /* SELECT COUNT(*) FROM tfacturaSapTemporal WHERE vigente = 0
 
@@ -41,7 +41,7 @@ WHERE
 -- SET
 --     fechaHora = DATEADD(DAY, -5, CAST(fechaCertificacion AS DATE))
 -- WHERE 
---     empresa = '00005'
+--     empresa = '00002'
 --     AND anulada = 0
 --     AND DATEDIFF(DAY, CAST(fechaHora AS DATE), CAST(fechaCertificacion AS DATE)) > 5
 
@@ -50,7 +50,7 @@ WHERE
 -- FROM
 --     tFacturaSapMensual 
 -- WHERE
---     empresa = '00005'
+--     empresa = '00003'
 --     AND anulada = 0
 --     AND DATEDIFF(DAY, CAST(fechaHora AS DATE), CAST(fechaCertificacion AS DATE)) > 5
 
@@ -90,9 +90,9 @@ WHERE
 --         WHERE
 --             t1.idFactura = t2.idFactura
 --     )
---     AND empresa = '00005'
---     AND cast(fechahora AS DATE) BETWEEN '2024-08-01' AND '2024-08-31'
+--     AND empresa = '00002'
+--     AND cast(fechahora AS DATE) BETWEEN '2024-10-01' AND '2024-10-20'
 --     AND anulada = 0
---     AND detallePago LIKE '%cupon%'
+--     AND detallePago NOT LIKE '%cupon%'
 -- ORDER BY
 --     fecha;

@@ -1,6 +1,6 @@
 use pinulito_pdv
 
-declare @empresa int = '00003', @fecha date = '2024-08-05';
+declare @empresa int = '00003', @fecha date = '2024-09-15';
 
 with facturas_pos as (
     select cab.numsap, sum((det.cantidad * det.precio) - det.descuento) as total

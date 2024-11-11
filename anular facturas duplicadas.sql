@@ -1,4 +1,5 @@
-DECLARE @fechaIni DATE = '2024-09-01' DECLARE @fechaFin DATE = '2024-09-09' DECLARE @idFactura int DECLARE @uuid nvarchar(36) DECLARE c CURSOR FOR
+USE PINULITO_PDV;
+DECLARE @fechaIni DATE = '2024-10-01' DECLARE @fechaFin DATE = '2024-10-31' DECLARE @idFactura int DECLARE @uuid nvarchar(36) DECLARE c CURSOR FOR
 SELECT
     MIN(idFactura) idFactura,
     uuidFactura

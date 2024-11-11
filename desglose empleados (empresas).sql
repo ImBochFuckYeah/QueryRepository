@@ -21,4 +21,4 @@ ORDER BY tContrato.codEmpresa;
 
 /* EJECUTAR SP INFORME EPLEADOR */
 
-EXEC spGenerarInformeEmpleador @year = 2023, @company = 8;
+-- EXEC spGenerarInformeEmpleador @year = 2023, @company = 8;

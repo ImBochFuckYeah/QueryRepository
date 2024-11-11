@@ -1,4 +1,4 @@
-use pinulito_pdv
+-- use pinulito_pdv
 
 with cte_detalles as (
     select
@@ -6,7 +6,7 @@ with cte_detalles as (
     sum((b.cantidad * b.precio) - b.descuento) as total_detalle
     from tFacturaSemanal as a
     join tFacturaDetalleSemanal as b on a.idFactura = b.idFactura
-    where empresa = '00005' and tienda = '00063' and cast(fechaHora as date) = '2024-09-08'
+    where empresa = '00005' and tienda = '00091' and cast(fechaHora as date) = '2024-09-08'
     group by a.idFactura
 )
 
