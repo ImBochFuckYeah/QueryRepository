@@ -41,7 +41,7 @@ WHERE
 -- SET
 --     fechaHora = DATEADD(DAY, -5, CAST(fechaCertificacion AS DATE))
 -- WHERE 
---     empresa = '00002'
+--     empresa = '00004'
 --     AND anulada = 0
 --     AND DATEDIFF(DAY, CAST(fechaHora AS DATE), CAST(fechaCertificacion AS DATE)) > 5
 
@@ -90,8 +90,8 @@ WHERE
 --         WHERE
 --             t1.idFactura = t2.idFactura
 --     )
---     AND empresa = '00002'
---     AND cast(fechahora AS DATE) BETWEEN '2024-10-01' AND '2024-10-20'
+--     AND empresa = '00004'
+--     AND cast(fechahora AS DATE) BETWEEN '20250101' AND '20250120'
 --     AND anulada = 0
 --     AND detallePago NOT LIKE '%cupon%'
 -- ORDER BY

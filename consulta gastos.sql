@@ -111,7 +111,7 @@ DECLARE @PagoPersonaExtra as TABLE (
     numero nvarchar(max)
 )
 
-DECLARE @fechaInicio date = '2024-10-01' DECLARE @fechaFin date = '2024-10-31'
+DECLARE @fechaInicio date = '2025-01-01' DECLARE @fechaFin date = '2025-01-31'
 
 --INSERT INTO TABLE @RECIBOS
 INSERT INTO

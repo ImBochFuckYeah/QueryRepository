@@ -1,122 +1,16 @@
-DECLARE @codEmpresa int = 8 DECLARE @fechaCalculo as date = '2022-01-15' DECLARE @codEmpleado2 int = 4628
-SET
-	@fechaCalculo = (
-		SELECT
-			TOP 1 finContract
-		FROM
-			tContrato
-		WHERE
-			codEmpleado = @codEmpleado2
-		ORDER BY
-			finContract DESC
-	) 
-/*    
--- EMPRESA
-SELECT
-	codEmpresa,
-	nombre,
-	nombreComercial,
-	nit,
-	nombreCorto
-FROM
-	tEmpresa
-WHERE
-	codEmpresa = @codEmpresa 
+DECLARE @codEmpresa INT = 4, @fechaCalculo DATE = '2024-11-25', @codEmpleado2 INT = 4249;
 
--- DATOS EMPLEADO
-SELECT
-	TOP 1 *,
-	CASE
-		WHEN MONTH(@fechaCalculo) = 11
-		AND DAY(@fechaCalculo) = 30 THEN 0
-		ELSE DATEDIFF(
-			DAY,
-			CONVERT(date, periodoAguinaldo, 103),
-			@fechaCalculo
-		) + 1
-	END AS diasAguinaldo,
-	DATEDIFF(
-		DAY,
-		CONVERT(date, periodoBono, 103),
-		@fechaCalculo
-	) + 1 as diasBono
-FROM
-	(
-		SELECT
-			t0.codEmpleado,
-			T5.codigo AS aliasCodigo,
-			t1.nombreEmpleado,
-			t1.segundoNombre,
-			t1.apellidoEmpleado,
-			t1.segundoApellido,
-			t1.apellidoCasada,
-			UPPER(
-				ISNULL(t1.nombreEmpleado, '') + ' ' + ISNULL(t1.segundoNombre, '') + ' ' + ISNULL(t1.apellidoEmpleado, '') + ' ' + ISNULL(t1.segundoApellido, '') + ' ' + ISNULL(t1.apellidoCasada, '')
-			) AS empleado,
-			t1.noDoc,
-			T3.nombreDepartamento,
-			T4.nombreMunicipio,
-			MONTH(T0.finContract) -1 AS mesFinContract,
-			dbo.numeroAletra(DAY(t0.finContract)) AS diaFinContract,
-			dbo.numeroAletra(YEAR(t0.finContract)) AS anioContract,
-			t0.nomPuesto,
-			CONVERT(varchar, t0.fechaIngreso, 103) as fechaIngreso,
-			CONVERT(varchar, t0.finContract, 103) as finContract,
-			t0.salarioOrdinario,
-			t0.bonifDecreto,
-			t0.motivRetiro,
-			t2.nombre AS departamento,
-			periodoAguinaldo = CASE
-				WHEN (MONTH(@fechaCalculo) = 12) THEN CASE
-					WHEN DATEFROMPARTS(YEAR(@fechaCalculo), 12, 1) > t0.fechaIngreso THEN CONVERT(
-						varchar,
-						DATEFROMPARTS(YEAR(@fechaCalculo), 12, 1),
-						103
-					)
-					ELSE CONVERT(varchar, t0.fechaIngreso, 103)
-				END
-				ELSE CASE
-					WHEN DATEFROMPARTS(YEAR(@fechaCalculo) - 1, 12, 1) > t0.fechaIngreso THEN CONVERT(
-						varchar,
-						DATEFROMPARTS(YEAR(@fechaCalculo) - 1, 12, 1),
-						103
-					)
-					ELSE CONVERT(varchar, t0.fechaIngreso, 103)
-				END
-			END,
-			periodoBono = CASE
-				WHEN (MONTH(@fechaCalculo) > 6) THEN CASE
-					WHEN DATEFROMPARTS(YEAR(@fechaCalculo), 7, 1) > t0.fechaIngreso THEN CONVERT(
-						varchar,
-						DATEFROMPARTS(YEAR(@fechaCalculo), 7, 1),
-						103
-					)
-					ELSE CONVERT(varchar, t0.fechaIngreso, 103)
-				END
-				ELSE CASE
-					WHEN DATEFROMPARTS(YEAR(@fechaCalculo) - 1, 7, 1) > t0.fechaIngreso THEN CONVERT(
-						varchar,
-						DATEFROMPARTS(YEAR(@fechaCalculo) - 1, 7, 1),
-						103
-					)
-					ELSE CONVERT(varchar, t0.fechaIngreso, 103)
-				END
-			END
-		FROM
-			tContrato t0
-			INNER JOIN tEmpleado t1 ON t0.codEmpleado = t1.codEmpleado
-			INNER JOIN tDepartamento t2 ON t0.codDepto = t2.codDepto
-			INNER JOIN tDepartamentoGeo T3 ON t1.departVec = T3.idDepartamentoGeo
-			INNER JOIN tMunicipioEmpleador T4 ON t1.muniVec = T4.idMunicipioEmpleador
-			LEFT JOIN tPlanilla T5 ON t0.codEmpleado = T5.codEmpleado
-			AND T5.idEmpresa = @codEmpresa
-		WHERE
-			t0.codEmpresa = @codEmpresa
-			AND t0.codEmpleado = @codEmpleado2
-			AND t0.finContract = @fechaCalculo
-	) x 
-*/
--- SALARIO ULTIMOS 180 DIAS
+SET	@fechaCalculo = (
+	SELECT
+		TOP 1 finContract
+	FROM
+		tContrato
+	WHERE
+		codEmpleado = @codEmpleado2
+	ORDER BY
+		finContract DESC
+);
+
 SET
 	@fechaCalculo = DATEADD(DAY, 1, @fechaCalculo);
 
@@ -163,14 +57,9 @@ SELECT
 	NULL
 FROM
 	tPlanilla t0
-	INNER JOIN tEmpleado t1 ON t0.codEmpleado = t1.codEmpleado
-	INNER JOIN tContrato t2 ON t0.codEmpleado = t2.codEmpleado
-	AND (
-		finContract >= DATEADD(DAY, -1, @fechaCalculo)
-		OR finContract IS NULL
-		OR finContract = '1900-01-01'
-	)
-	INNER JOIN tPeriodo t3 ON t0.idPeriodo = t3.idPeriodo
+	JOIN tEmpleado t1 ON t0.codEmpleado = t1.codEmpleado
+	JOIN tContrato t2 ON t0.codEmpleado = t2.codEmpleado
+	JOIN tPeriodo t3 ON t0.idPeriodo = t3.idPeriodo
 WHERE
 	t0.idEmpresa = @codEmpresa
 	AND T0.codEmpleado = @codEmpleado2
@@ -181,6 +70,11 @@ WHERE
 		OR MONTH(t3.fechaInicio) < MONTH(@fechaCalculo)
 	)
 	AND t3.fechaInicio <= @fechaCalculo
+	AND (
+		finContract >= DATEADD(DAY, -1, @fechaCalculo)
+		OR finContract IS NULL
+		OR finContract = '1900-01-01'
+	)
 GROUP BY
 	t1.codEmpleado,
 	t1.nombreEmpleado,
@@ -190,87 +84,91 @@ GROUP BY
 	t1.apellidoCasada,
 	YEAR(t3.fechaInicio),
 	MONTH(t3.fechaInicio),
-	t2.fechaIngreso
-SELECT
-	@@ROWCOUNT DECLARE @codEmpleado int = 0 DECLARE @codEmpleadoActual int = 0 DECLARE @an int DECLARE @mes int DECLARE @diasAcumulado int = 0 DECLARE @diasReal int DECLARE @diasLiquidacion int = 0 DECLARE c1 CURSOR FOR
-SELECT
-	[año],
-	mes,
-	codEmpleado,
-	diasReal
-FROM
-	@salarios
-ORDER BY
-	codEmpleado ASC,
-	[año] DESC,
-	mes DESC OPEN c1 FETCH NEXT
-FROM
-	c1 INTO @an,
-	@mes,
-	@codEmpleado,
-	@diasReal WHILE @@FETCH_STATUS = 0 BEGIN IF (@codEmpleadoActual != @codEmpleado) BEGIN
-SET
-	@diasAcumulado = 0
-SET
-	@codEmpleadoActual = @codEmpleado
-END IF (
-	@diasReal = 30
-	AND @diasAcumulado <= 150
-) BEGIN
-SET
-	@diasAcumulado = @diasAcumulado + 30
-SET
-	@diasLiquidacion = 30
-END
-ELSE IF (
-	@diasReal + @diasAcumulado + @diasMesActual <= 182
-) BEGIN
-SET
-	@diasAcumulado = @diasAcumulado + @diasReal + @diasMesActual
-SET
-	@diasLiquidacion = @diasReal
-END
-ELSE IF (
-	@diasReal > (180 - @diasAcumulado - @diasMesActual)
-) BEGIN
-SET
-	@diasAcumulado = @diasAcumulado + (180 - @diasAcumulado - @diasMesActual)
-SET
-	@diasLiquidacion = (180 - @diasAcumulado - @diasMesActual)
-END
-ELSE IF (@diasAcumulado <= 180) BEGIN
-SET
-	@diasAcumulado = @diasAcumulado + @diasReal
-SET
-	@diasLiquidacion = @diasReal
-END
-ELSE BEGIN
-SET
-	@diasLiquidacion = 0
-END
-UPDATE
-	@salarios
-SET
-	diasLiquidacion = CASE
-		WHEN codEmpleado = 1763
-		and mes in (1, 2, 3) THEN 0
-		ELSE @diasLiquidacion
+	t2.fechaIngreso;
+
+DECLARE @codEmpleado INT = 0;
+DECLARE @codEmpleadoActual INT = 0;
+DECLARE @an INT;
+DECLARE @mes INT;
+DECLARE @diasAcumulado INT = 0;
+DECLARE @diasReal INT;
+DECLARE @diasLiquidacion INT = 0;
+
+/******************************************************************************************************************/
+DECLARE c1 CURSOR FOR
+	SELECT [año], mes, codEmpleado, diasReal
+	FROM @salarios
+	ORDER BY codEmpleado ASC, [año] DESC, mes DESC
+OPEN c1 FETCH NEXT
+FROM c1 INTO @an, @mes, @codEmpleado, @diasReal WHILE @@FETCH_STATUS = 0 
+BEGIN 
+	IF (@codEmpleadoActual != @codEmpleado)
+	BEGIN
+		SET
+			@diasAcumulado = 0
+		SET
+			@codEmpleadoActual = @codEmpleado
 	END
-WHERE
-	codEmpleado = @codEmpleado
-	AND mes = @mes
-	AND [año] = @an FETCH NEXT
-FROM
-	c1 INTO @an,
-	@mes,
-	@codEmpleado,
-	@diasReal
-END CLOSE c1 DEALLOCATE c1
+	--  
+	IF (
+		@diasReal = 30
+		AND @diasAcumulado <= 150
+	) BEGIN
+		SET
+			@diasAcumulado = @diasAcumulado + 30
+		SET
+			@diasLiquidacion = 30
+	END
+	-- 
+	ELSE IF (
+		@diasReal + @diasAcumulado + @diasMesActual <= 182
+	) BEGIN
+		SET
+			@diasAcumulado = @diasAcumulado + @diasReal + @diasMesActual
+		SET
+			@diasLiquidacion = @diasReal
+	END
+	-- 
+	ELSE IF (
+		@diasReal > (180 - @diasAcumulado - @diasMesActual)
+	) BEGIN
+		SET
+			@diasAcumulado = @diasAcumulado + (180 - @diasAcumulado - @diasMesActual)
+		SET
+			@diasLiquidacion = (180 - @diasAcumulado - @diasMesActual)
+	END
+	-- 
+	ELSE IF (@diasAcumulado <= 180) 
+	BEGIN
+		SET
+			@diasAcumulado = @diasAcumulado + @diasReal
+		SET
+			@diasLiquidacion = @diasReal
+	END
+	-- 
+	ELSE 
+	BEGIN
+		SET
+			@diasLiquidacion = 0
+	END
+-- 
+	UPDATE @salarios
+	SET diasLiquidacion = @diasLiquidacion
+	WHERE codEmpleado = @codEmpleado AND mes = @mes AND [año] = @an 
+-- 
+FETCH NEXT
+FROM c1 
+INTO @an, @mes, @codEmpleado, @diasReal
+END CLOSE c1 DEALLOCATE c1;
+/******************************************************************************************************************/
+
+-- 
 SET
 	@fechaCalculo = DATEADD(DAY, -1, @fechaCalculo);
-
+-- 
 SET
 	@diasMesActual = DAY(@fechaCalculo);
+-- 
 
 INSERT INTO
 	@salarios
@@ -349,15 +247,20 @@ WHERE
 			@salarios NOLOCK
 		WHERE
 			codEmpleado = T0.codEmpleado
-	)
+	);
+
+-- 
 DELETE FROM
 	@salarios
 WHERE
-	diasLiquidacion = 0
+	diasLiquidacion = 0;
+-- 
 UPDATE
 	@salarios
 SET
-	devengado = salarioMensual / 30 * diasLiquidacion
+	devengado = salarioMensual / 30 * diasLiquidacion;
+-- 
+
 SELECT
 	codEmpleado,
 	[año],
@@ -375,4 +278,4 @@ FROM
 ORDER BY
 	codEmpleado ASC,
 	[año] ASC,
-	mes ASC
+	mes ASC;
