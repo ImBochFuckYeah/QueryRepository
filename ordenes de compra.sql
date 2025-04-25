@@ -4,7 +4,7 @@ select table_1.idSolicitud, table_2.itemCode, table_3.*
 from tSolicitudBodega as table_1
 join tSolicitudDetalleBodega as table_2 on table_1.idSolicitud = table_2.idSolicitud
 join tAsignarProveedor as table_3 on table_2.idDetalle = table_3.idDetalle
-where table_1.docNum = 1495 and table_3.vigencia = 1 --AND table_3.codigoProveedor = 'PC00011'
+where table_1.docNum = 1552 and table_3.vigencia = 1 --AND table_3.codigoProveedor = 'PC00011'
 order by table_3.docEntry;
 
 -- select * from tSolicitudEmpaques where idSolicitud = 1525
