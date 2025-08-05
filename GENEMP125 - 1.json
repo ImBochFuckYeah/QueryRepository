@@ -1,0 +1,19 @@
+[
+  {
+    "idVale": 34163,
+    "tipoVale": "P",
+    "serie": "GENEMP125",
+    "numero": "1",
+    "fechaInicio": "2025-05-06T00:00:00",
+    "fechaFin": "2025-08-31T00:00:00",
+    "noDocumento": "VERIFICAR DPI",
+    "nombre": "AL PORTADOR",
+    "montoTotal": 94.00,
+    "fechaCanje": "2025-05-14T09:51:19.267",
+    "empresaCanje": "00003",
+    "tiendaCanje": "00074",
+    "descripcionVale": "SUPER COMBO",
+    "codEmpleado": 3723,
+    "idApiToken": 64
+  }
+]
