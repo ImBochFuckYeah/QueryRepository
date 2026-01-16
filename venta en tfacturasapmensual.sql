@@ -12,12 +12,12 @@ from
 where
     cab.anulada = 0
     and cab.empresa = '00004'
-    and cast(fechaHora as date) between '2025-03-01' and '2025-03-31'
+    and cast(fechaHora as date) between '2025-12-01' and '2025-12-31'
     and numsap is null
 group by
     cast(fechaHora as date)
 order by fecha;
 
--- select uuidFactura, count(*) from tFacturaSapMensual where anulada = 0 and empresa = '00004' group by uuidFactura having count(uuidFactura) > 1;
--- select * from tFacturaSapMensual where uuidFactura in ();
--- update tFacturaSapMensual set anulada = 1 where idFactura in ();
+--select uuidFactura, count(*) from tFacturaSapMensual where anulada = 0 and empresa = '00004' group by uuidFactura having count(uuidFactura) > 1;
+--select * from tFacturaSapMensual where uuidFactura in ();
+--update tFacturaSapMensual set anulada = 1 where idFactura in ();

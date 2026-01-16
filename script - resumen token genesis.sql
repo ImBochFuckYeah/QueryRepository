@@ -9,4 +9,5 @@ cupones_disponibles = SUM(CASE WHEN v.fechaCanje IS NULL AND v.idApiToken IS NUL
 FROM [PINULITO_PDV].[dbo].[tValeExterno] AS v
 JOIN series AS s ON v.serie = s.serie
 LEFT JOIN token_additional_information AS t ON v.idApiToken = t.id
+WHERE s.[status] = 1
 GROUP BY v.serie, v.descripcionVale;
